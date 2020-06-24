@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <modules>
+        <module>holmes-common</module>
+        <module>holmes-agent</module>
+        <module>holmes-api</module>
+        <module>holmes-server</module>
+        <module>holmes-alert</module>
+        <module>holmes-core</module>
+    </modules>
+
+    <groupId>com.shuzheng</groupId>
+    <artifactId>holmes</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <properties>
+        <!--        java配置-->
+        <java.version>1.8</java.version>
+        <java.source.version>1.8</java.source.version>
+        <java.target.version>1.8</java.target.version>
+        <!--        打包配置-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <versions-maven-plugin-version>2.3</versions-maven-plugin-version>
+
+        <skipTests>true</skipTests>
+        <skipRat>true</skipRat>
+
+        <lombok.version>1.18.4</lombok.version>
+
+        <oshi.core.version>3.5.0</oshi.core.version>
+        <commons.configuration.version>1.10</commons.configuration.version>
+        <commons.email.version>1.5</commons.email.version>
+        <slf4j.api.version>1.7.5</slf4j.api.version>
+        <commons.collections.version>3.2.2</commons.collections.version>
+        <commons.collections4.version>4.1</commons.collections4.version>
+        <fastjson.version>1.2.61</fastjson.version>
+        <guava.version>20.0</guava.version>
+        <dolphinscheduler.version>1.2.1</dolphinscheduler.version>
+        <mysql.connector.version>5.1.34</mysql.connector.version>
+        <spring.boot.kafka.version>2.2.8.RELEASE</spring.boot.kafka.version>
+        <spring.boot.version>2.1.7.RELEASE</spring.boot.version>
+        <spring.context.version>5.2.6.RELEASE</spring.context.version>
+        <dolphinscheduler.remote.version>1.2.3</dolphinscheduler.remote.version>
+        <netty.version>4.1.33.Final</netty.version>
+        <flume.sdk.version>1.8.0</flume.sdk.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.oshi</groupId>
+                <artifactId>oshi-core</artifactId>
+                <version>${oshi.core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-configuration</groupId>
+                <artifactId>commons-configuration</artifactId>
+                <version>${commons.configuration.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.shuzheng</groupId>
+                <artifactId>holmes-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons.collections.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons.collections4.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.dolphinscheduler</groupId>
+                <artifactId>dolphinscheduler-alert</artifactId>
+                <version>${dolphinscheduler.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.connector.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.kafka</groupId>
+                <artifactId>spring-kafka</artifactId>
+                <version>${spring.boot.kafka.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.context.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.dolphinscheduler</groupId>
+                <artifactId>apache-dolphinscheduler-incubating</artifactId>
+                <version>${dolphinscheduler.remote.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.flume</groupId>
+                <artifactId>flume-ng-sdk</artifactId>
+                <version>${flume.sdk.version}</version>
+            </dependency>
+        </dependencies>
+
+
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+
+</project>
