@@ -48,6 +48,7 @@
         <dolphinscheduler.remote.version>1.2.3</dolphinscheduler.remote.version>
         <netty.version>4.1.33.Final</netty.version>
         <flume.sdk.version>1.8.0</flume.sdk.version>
+        <sigar.version>4.2.0</sigar.version>
     </properties>
 
     <dependencyManagement>
@@ -69,6 +70,13 @@
                 <artifactId>holmes-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.shuzheng</groupId>
+                <artifactId>holmes-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>commons-collections</groupId>
@@ -147,6 +155,13 @@
                 <artifactId>flume-ng-sdk</artifactId>
                 <version>${flume.sdk.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.hyperic</groupId>
+                <artifactId>sigar</artifactId>
+                <version>${sigar.version}</version>
+            </dependency>
+
         </dependencies>
 
 

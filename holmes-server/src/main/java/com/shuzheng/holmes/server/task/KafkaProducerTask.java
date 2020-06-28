@@ -1,21 +1,17 @@
-package com.shuzheng.holmes.server;
-
-import java.util.Date;
-import java.util.UUID;
+package com.shuzheng.holmes.server.task;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("test")
-public class KfkaProducer {
+public class KafkaProducerTask {
 
-	private static Logger logger = LoggerFactory.getLogger(KfkaProducer.class);
+	private static Logger logger = LoggerFactory.getLogger(KafkaProducerTask.class);
 
 	@Autowired
 	private KafkaTemplate kafkaTemplate;

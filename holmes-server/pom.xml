@@ -24,9 +24,9 @@
 
         <dependency>
             <groupId>com.shuzheng</groupId>
-            <artifactId>holmes-common</artifactId>
+            <artifactId>holmes-core</artifactId>
         </dependency>
-
     </dependencies>
+
 
 </project>

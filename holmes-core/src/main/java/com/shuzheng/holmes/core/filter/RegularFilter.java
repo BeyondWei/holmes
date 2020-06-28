@@ -37,7 +37,7 @@ public class RegularFilter extends HolmesFilterAbstract {
      */
     @Override
     public Object filter(Object msg) {
-        String regular = this.configContext.getString("regular");
+        String regular = getConfigContext().getString("regular");
 
         String match = null;
         Matcher m = matcher(regular, msg.toString());

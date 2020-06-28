@@ -1,11 +1,20 @@
 package com.shuzheng.holmes.common.utils;
 
 import com.google.common.io.ByteStreams;
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+import org.apache.avro.util.Utf8;
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ClassloadUtils extends ClassLoader {
 
@@ -27,7 +36,7 @@ public class ClassloadUtils extends ClassLoader {
     /**
      * 从jar中加载class至JVM，并返回class
      */
-    public static Class<?> classLoadFromJar(String className, String jarPath) {
+    public Class<?> classLoadFromJar(String className, String jarPath) {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
@@ -48,6 +57,48 @@ public class ClassloadUtils extends ClassLoader {
             logger.error("class{}在{}中不存在;{}", className, jarPath, e.getMessage());
         }
         return aClass;
+    }
+
+    /**
+     * java加载至JVM，并返回class
+     */
+    public Class<?> classLoadFromJavaFile(String className, String javaPath, String classPath) {
+        File classFile = new File(javaPath);
+        if (!classFile.exists()) {
+            logger.error("{}不存在", javaPath);
+            return null;
+        }
+        String cmd = "javac -classpath " + classPath + " " + javaPath;
+        try {
+            Process exec = Runtime.getRuntime().exec(cmd);
+            int status = exec.waitFor();
+            if (status != 0) {
+                logger.error("{}编译失败:{}", javaPath, new String(Byte2InputStream.inputStream2byte(exec.getErrorStream())));
+            }
+        } catch (IOException | InterruptedException e) {
+            logger.error("{}编译失败", javaPath);
+            e.printStackTrace();
+        }
+
+
+        File file = new File(classFile.getParent());
+        File[] tempList = file.listFiles();
+
+        String[] split = className.split("\\.");
+        String realName = split[split.length - 1];
+        Class<?> returnClass = classLoadFromClassFile(className, javaPath.substring(0, javaPath.length() - 4) + "class");
+        // 加载内部类
+        Arrays.asList(tempList).forEach(filePath -> {
+            try {
+                String name = filePath.getName().split("\\$")[1].split("\\.")[0];
+                if (filePath.getName().contains(realName) && !name.equals(realName)) {
+                    classLoadFromClassFile(className + "$" + name, filePath.toString());
+                }
+            } catch (Exception e) {
+
+            }
+        });
+        return returnClass;
     }
 
     /**
@@ -96,7 +147,7 @@ public class ClassloadUtils extends ClassLoader {
     /**
      * 判断类是否已经加载
      */
-    private static boolean isExist(String className) {
+    private boolean isExist(String className) {
         try {
             Class<?> aClass1 = Class.forName(className, false, classloadUtils);
         } catch (ClassNotFoundException e) {
@@ -111,7 +162,7 @@ public class ClassloadUtils extends ClassLoader {
      * @param className
      * @return
      */
-    public static Class<?> tryGetClass(String className) {
+    public Class<?> tryGetClass(String className) {
         if (isExist(className)) {
             try {
                 return Class.forName(className, true, classloadUtils);
@@ -124,13 +175,7 @@ public class ClassloadUtils extends ClassLoader {
     }
 
     public static void main(String[] args) {
-        ClassloadUtils classloadUtils = ClassloadUtils.getClassloadUtils();
-        for (int i = 0; i < 100; i++) {
-            new Thread(() -> {
-                Class<?> aClass = classloadUtils.classLoadFromClassFile("com.beyond.run.Application", "C:\\Users\\WIN10\\Desktop\\Application.class");
-            }).start();
-        }
-        isExist("com.beyond.run.Application");
+
     }
 
 }

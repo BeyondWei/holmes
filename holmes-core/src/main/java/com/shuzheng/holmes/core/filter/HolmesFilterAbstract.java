@@ -10,8 +10,8 @@ import com.shuzheng.holmes.core.enums.FilterTypeEnums;
 public abstract class HolmesFilterAbstract implements HolmesFilter {
 
     private String filterName = this.getClass().getName();
-    public FilterTypeEnums filterTypeEnums;
-    public ConfigContext configContext;
+    protected FilterTypeEnums filterTypeEnums;
+    protected ConfigContext configContext;
 
     @Override
     public FilterTypeEnums getFilterType() {
@@ -21,6 +21,10 @@ public abstract class HolmesFilterAbstract implements HolmesFilter {
     @Override
     public String getFilterName() {
         return filterName;
+    }
+
+    public ConfigContext getConfigContext() {
+        return configContext;
     }
 
     @Override
