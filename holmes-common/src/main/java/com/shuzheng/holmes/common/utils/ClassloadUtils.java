@@ -174,8 +174,4 @@ public class ClassloadUtils extends ClassLoader {
         }
     }
 
-    public static void main(String[] args) {
-
-    }
-
 }

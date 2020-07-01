@@ -29,7 +29,7 @@ public abstract class HolmesDealAbstract implements HolmesDeal {
     }
 
     @Override
-    public abstract Object deal(Object msg);
+    public abstract void deal(Object msg);
 
     public void register() {
         if (!DealContext.isExist(getDealName())) {

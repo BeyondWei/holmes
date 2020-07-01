@@ -36,15 +36,15 @@ public class HolmesFilterFactory {
     /**
      *
      * @param holmesFilterAbstractClass
-     * @param filterName
+     * @param holmesFilterName
      * @param configContext
      * @param filterTypeEnums
      */
     public static void createAndRegister(Class<? extends HolmesFilterAbstract> holmesFilterAbstractClass,
-                                                          @NotNull String filterName,
+                                                          @NotNull String holmesFilterName,
                                                           ConfigContext configContext,
                                                           FilterTypeEnums filterTypeEnums) {
-        createFilter(holmesFilterAbstractClass,filterName,configContext,filterTypeEnums).register();
+        createFilter(holmesFilterAbstractClass,holmesFilterName,configContext,filterTypeEnums).register();
     }
 
 }

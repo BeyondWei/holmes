@@ -10,7 +10,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class Application {
 
-
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
