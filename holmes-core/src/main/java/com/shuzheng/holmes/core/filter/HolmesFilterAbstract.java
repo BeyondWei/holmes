@@ -9,7 +9,7 @@ import com.shuzheng.holmes.core.enums.FilterTypeEnums;
  */
 public abstract class HolmesFilterAbstract implements HolmesFilter {
 
-    private String filterName = this.getClass().getName();
+    protected String filterName;
     protected FilterTypeEnums filterTypeEnums;
     protected ConfigContext configContext;
 

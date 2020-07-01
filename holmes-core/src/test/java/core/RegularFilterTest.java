@@ -13,8 +13,7 @@ public class RegularFilterTest {
     public static void main(String[] args) {
         ConfigContext configContext = new ConfigContext();
         configContext.put("regular", "\\d{15}(\\d{2}[0-9xX])?");
-        HolmesFilterAbstract factory = HolmesFilterFactory.factory(RegularFilter.class, configContext, FilterTypeEnums.JAVA);
-        factory.register();
+        HolmesFilterFactory.createAndRegister(RegularFilter.class,"", configContext, FilterTypeEnums.JAVA);
 
         HolmesFilter filter = FilterContext.getFilter("com.shuzheng.holmes.core.filter.RegularFilter");
         Object filter1 = filter.filter("qqq330483199702045415qqq");

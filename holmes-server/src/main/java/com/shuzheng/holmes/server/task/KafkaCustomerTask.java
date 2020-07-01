@@ -1,4 +1,4 @@
-package com.shuzheng.holmes.server;
+package com.shuzheng.holmes.server.task;
 
 import com.shuzheng.holmes.common.dto.FlumeData;
 import com.shuzheng.holmes.common.utils.FlumeAvroUtils;
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 
 @Component
-public class KafkaCustomer {
+public class KafkaCustomerTask {
 
     private static final String TPYE = "type";
 

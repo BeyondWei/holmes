@@ -5,6 +5,8 @@ import java.util.regex.Pattern;
 
 public class RegularFilter extends HolmesFilterAbstract {
 
+    private static final String REGULAR = "regular";
+
     /**
      * 编译一个正则表达式
      *
@@ -12,7 +14,7 @@ public class RegularFilter extends HolmesFilterAbstract {
      * @return
      */
     public static Pattern compile(String regex, boolean isInsensitive) {
-        if (true == isInsensitive) {
+        if (isInsensitive) {
             return Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         } else {
             return Pattern.compile(regex);
@@ -32,12 +34,13 @@ public class RegularFilter extends HolmesFilterAbstract {
 
     /**
      * 正则表达式获取第一个符合的字符串
+     *
      * @param msg
      * @return
      */
     @Override
     public Object filter(Object msg) {
-        String regular = getConfigContext().getString("regular");
+        String regular = getConfigContext().getString(REGULAR);
 
         String match = null;
         Matcher m = matcher(regular, msg.toString());

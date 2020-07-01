@@ -1,6 +1,6 @@
 spring:
   kafka:
-    bootstrap-servers: 192.168.5.120:9092 #kafka的访问地址，多个用","隔开
+    bootstrap-servers: 192.168.5.120:9092,192.168.5.120:9093,192.168.5.120:9094 #kafka的访问地址，多个用","隔开
     consumer:
       enable-auto-commit: false
       group-id: test1
