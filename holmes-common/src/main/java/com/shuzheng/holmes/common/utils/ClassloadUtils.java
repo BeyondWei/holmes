@@ -1,20 +1,12 @@
 package com.shuzheng.holmes.common.utils;
 
 import com.google.common.io.ByteStreams;
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
-import org.apache.avro.util.Utf8;
-import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class ClassloadUtils extends ClassLoader {
 
@@ -149,9 +141,14 @@ public class ClassloadUtils extends ClassLoader {
      */
     private boolean isExist(String className) {
         try {
-            Class<?> aClass1 = Class.forName(className, false, classloadUtils);
+            Class.forName(className, false, classloadUtils);
         } catch (ClassNotFoundException e) {
-            return false;
+            try {
+                Class.forName(className);
+            } catch (ClassNotFoundException classNotFoundException) {
+                return false;
+            }
+            return true;
         }
         return true;
     }
@@ -167,7 +164,11 @@ public class ClassloadUtils extends ClassLoader {
             try {
                 return Class.forName(className, true, classloadUtils);
             } catch (ClassNotFoundException e) {
-                return null;
+                try {
+                    return Class.forName(className);
+                } catch (ClassNotFoundException classNotFoundException) {
+                    return null;
+                }
             }
         } else {
             return null;

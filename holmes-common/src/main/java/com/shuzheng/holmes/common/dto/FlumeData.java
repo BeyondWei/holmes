@@ -9,4 +9,5 @@ public class FlumeData {
 
     private Map<String, String> headerMap;
     private String msg;
+    private Integer id;
 }

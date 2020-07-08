@@ -2,9 +2,26 @@ spring:
   kafka:
     bootstrap-servers: 192.168.5.120:9092,192.168.5.120:9093,192.168.5.120:9094 #kafka的访问地址，多个用","隔开
     consumer:
-      enable-auto-commit: false
+      enable-auto-commit: true
       group-id: test1
       auto-offset-reset: earliest
       keyDeserializer: org.apache.kafka.common.serialization.StringDeserializer
       valueDeserializer: org.apache.kafka.common.serialization.StringDeserializer
       auto-commit-interval: 100
+  cache:
+    ehcache:
+      config: classpath:/ehcache/ehcache.xml
+
+datasource:
+  druid:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initial-size: 1
+    max-active: 20
+    min-idle: 1
+    test-on-borrow: true
+    test-while-idle: true
+    time-between-eviction-runs-millis: 60000
+    url: jdbc:mysql://192.168.5.104:3306/holmes?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: root
+    password: haha@123456
+    validation-query: SELECT 1 FROM DUAL

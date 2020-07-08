@@ -848,4 +848,15 @@ public final class Constants {
     public static final int ABNORMAL_NODE_STATUS = 1;
 
 
+    /**
+     * flume
+     */
+    public static final String FLUME_LOG_UUID = "flume.client.log4j.logUuid";
+    public static final String FLUME_PROJECT_UUID = "flume.client.log4j.projectUuid";
+
+    /**
+     * deal
+     */
+    public static final String DEAL_LOG_FILE_PATH = "log.file.path";
+
 }

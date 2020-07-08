@@ -2,7 +2,7 @@ package com.shuzheng.holmes.core.filter;
 
 import com.shuzheng.holmes.core.context.ConfigContext;
 import com.shuzheng.holmes.core.enums.FilterTypeEnums;
-import com.sun.istack.internal.NotNull;
+import lombok.NonNull;
 
 public class HolmesFilterFactory {
 
@@ -16,9 +16,9 @@ public class HolmesFilterFactory {
      * @return
      */
     public static HolmesFilterAbstract createFilter(Class<? extends HolmesFilterAbstract> holmesFilterAbstractClass,
-                                               @NotNull String filterName,
-                                               ConfigContext configContext,
-                                               FilterTypeEnums filterTypeEnums) {
+                                                    @NonNull String filterName,
+                                                    ConfigContext configContext,
+                                                    FilterTypeEnums filterTypeEnums) {
         HolmesFilterAbstract holmesFilter = null;
         try {
             holmesFilter = holmesFilterAbstractClass.newInstance();
@@ -34,17 +34,16 @@ public class HolmesFilterFactory {
     }
 
     /**
-     *
      * @param holmesFilterAbstractClass
      * @param holmesFilterName
      * @param configContext
      * @param filterTypeEnums
      */
     public static void createAndRegister(Class<? extends HolmesFilterAbstract> holmesFilterAbstractClass,
-                                                          @NotNull String holmesFilterName,
-                                                          ConfigContext configContext,
-                                                          FilterTypeEnums filterTypeEnums) {
-        createFilter(holmesFilterAbstractClass,holmesFilterName,configContext,filterTypeEnums).register();
+                                         @NonNull String holmesFilterName,
+                                         ConfigContext configContext,
+                                         FilterTypeEnums filterTypeEnums) {
+        createFilter(holmesFilterAbstractClass, holmesFilterName, configContext, filterTypeEnums).register();
     }
 
 }

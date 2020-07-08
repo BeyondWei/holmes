@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shuzheng.holmes.dao.mapper.THsDealRulesInfoMapper">
+  <resultMap id="BaseResultMap" type="com.shuzheng.holmes.common.entity.THsDealRulesInfo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="deal_group_uuid" jdbcType="VARCHAR" property="dealGroupUuid" />
+    <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="rules_name" jdbcType="VARCHAR" property="rulesName" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="config" jdbcType="VARCHAR" property="config" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="is_effective" jdbcType="TINYINT" property="isEffective" />
+    <result column="context" jdbcType="LONGVARCHAR" property="context" />
+  </resultMap>
+    <select id="getTHsDealRulesInfoByDealGroupUuid"
+            resultType="com.shuzheng.holmes.common.entity.THsDealRulesInfo">
+      SELECT
+          t2.*
+      FROM
+          t_hs_deal_rules_group t1
+          LEFT JOIN t_hs_deal_rules_info t2 ON t1.uuid = t2.deal_group_uuid
+      WHERE
+          t1.is_effective = 0
+          AND t2.is_effective = 0
+          AND t1.uuid = #{dealGroupUuid}
+    </select>
+</mapper>

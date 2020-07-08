@@ -10,6 +10,8 @@
         <module>holmes-server</module>
         <module>holmes-alert</module>
         <module>holmes-core</module>
+        <module>holmes-service</module>
+        <module>holmes-dao</module>
     </modules>
 
     <groupId>com.shuzheng</groupId>
@@ -41,14 +43,22 @@
         <fastjson.version>1.2.61</fastjson.version>
         <guava.version>20.0</guava.version>
         <dolphinscheduler.version>1.2.1</dolphinscheduler.version>
-        <mysql.connector.version>5.1.34</mysql.connector.version>
+        <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
         <spring.boot.kafka.version>2.2.8.RELEASE</spring.boot.kafka.version>
         <spring.boot.version>2.1.7.RELEASE</spring.boot.version>
+        <ehcache.version>2.10.4</ehcache.version>
         <spring.context.version>5.2.6.RELEASE</spring.context.version>
         <dolphinscheduler.remote.version>1.2.3</dolphinscheduler.remote.version>
         <netty.version>4.1.33.Final</netty.version>
         <flume.sdk.version>1.8.0</flume.sdk.version>
+        <tk.mybatis.version>2.0.0</tk.mybatis.version>
         <sigar.version>4.2.0</sigar.version>
+        <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
+        <pagehelper.version>4.1.6</pagehelper.version>
+        <druid.version>1.0.31</druid.version>
+        <!--        tk mybatis 代码生成-->
+        <mybatis-generator-maven-plugin.version>1.3.5</mybatis-generator-maven-plugin.version>
+        <tk.mybatis.mapper.version>3.4.3</tk.mybatis.mapper.version>
     </properties>
 
     <dependencyManagement>
@@ -73,10 +83,21 @@
 
             <dependency>
                 <groupId>com.shuzheng</groupId>
+                <artifactId>holmes-dao</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.shuzheng</groupId>
                 <artifactId>holmes-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.shuzheng</groupId>
+                <artifactId>holmes-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>commons-collections</groupId>
@@ -111,7 +132,7 @@
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql.connector.version}</version>
+                <version>${mysql-connector-java.version}</version>
             </dependency>
 
             <dependency>
@@ -157,9 +178,37 @@
             </dependency>
 
             <dependency>
-                <groupId>org.hyperic</groupId>
-                <artifactId>sigar</artifactId>
-                <version>${sigar.version}</version>
+                <groupId>tk.mybatis</groupId>
+                <artifactId>mapper-spring-boot-starter</artifactId>
+                <version>${tk.mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-cache</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache</artifactId>
+                <version>${ehcache.version}</version>
             </dependency>
 
         </dependencies>

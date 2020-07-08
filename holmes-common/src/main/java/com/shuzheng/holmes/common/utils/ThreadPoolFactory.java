@@ -32,11 +32,12 @@ public class ThreadPoolFactory {
      * @param identifier
      * @return
      */
-    public ThreadPoolExecutor autoCreate(String identifier) {
+    public ThreadPoolExecutor autoCreate(String identifier,Integer capacity) {
         ThreadPoolExecutor threadPoolExecutor = hashMap.get(identifier);
         if (threadPoolExecutor == null) {
             int size = Runtime.getRuntime().availableProcessors();
-            return this.create(identifier, size, size * 2 + 1);
+            return this.create(identifier, size, size * 2 + 1, 0
+                    , new ArrayBlockingQueue<Runnable>(capacity));
         }
         return threadPoolExecutor;
     }

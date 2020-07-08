@@ -1,7 +1,13 @@
 package com.shuzheng.holmes.server.task;
 
+import com.alibaba.fastjson.JSONObject;
+import com.shuzheng.holmes.common.Constants;
 import com.shuzheng.holmes.common.dto.FlumeData;
+import com.shuzheng.holmes.common.entity.THsDealRulesInfo;
+import com.shuzheng.holmes.common.entity.THsFilterRulesGroup;
+import com.shuzheng.holmes.common.entity.THsFilterRulesInfo;
 import com.shuzheng.holmes.common.utils.ClassloadUtils;
+import com.shuzheng.holmes.common.utils.SpringUtil;
 import com.shuzheng.holmes.core.context.ConfigContext;
 import com.shuzheng.holmes.core.context.DealContext;
 import com.shuzheng.holmes.core.context.FilterContext;
@@ -13,11 +19,23 @@ import com.shuzheng.holmes.core.enums.FilterTypeEnums;
 import com.shuzheng.holmes.core.filter.HolmesFilter;
 import com.shuzheng.holmes.core.filter.HolmesFilterAbstract;
 import com.shuzheng.holmes.core.filter.HolmesFilterFactory;
-import com.shuzheng.holmes.core.filter.RegularFilter;
+import com.shuzheng.holmes.server.dto.DealDto;
+import com.shuzheng.holmes.server.dto.FilterDto;
+import com.shuzheng.holmes.service.bussiness.BusHolmesServerService;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class FilterTask implements Runnable {
-
+    private ConsumerRecord<Integer, String> record;
     private FlumeData flumeData;
+    private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    public FilterTask(FlumeData flumeData, ConsumerRecord<Integer, String> record) {
+        this.record = record;
+        this.flumeData = flumeData;
+    }
 
     public FilterTask(FlumeData flumeData) {
         this.flumeData = flumeData;
@@ -25,65 +43,74 @@ public class FilterTask implements Runnable {
 
     @Override
     public void run() {
-        // todo 根据数据类型从数据库获取所有相关的过滤规则
+        BusHolmesServerService busHolmesServerService = SpringUtil.getBean(BusHolmesServerService.class);
+        String logUuid = flumeData.getHeaderMap().get(Constants.FLUME_LOG_UUID);
+        List<THsFilterRulesInfo> tHsFilterRulesInfoByFilterGroupUuid = busHolmesServerService.getTHsFilterRulesInfoByFilterGroupUuid(flumeData.getHeaderMap().get(logUuid));
 
-        // TODO 加载class
-        testFilter(flumeData);
-        regularFilter(flumeData);
+        tHsFilterRulesInfoByFilterGroupUuid.forEach(tHsFilterRulesInfo -> {
+            // filter 执行
+            Object res = todoFilter(flumeData, tHsFilterRulesInfo);
+
+            // deal 执行
+            String dealGroupUuid = tHsFilterRulesInfo.getDealGroupUuid();
+            List<THsDealRulesInfo> tHsDealRulesInfoByDealGroupUuid = busHolmesServerService.getTHsDealRulesInfoByDealGroupUuid(dealGroupUuid);
+            tHsDealRulesInfoByDealGroupUuid.forEach(tHsDealRulesInfo -> {
+                todoDeal(res, tHsDealRulesInfo);
+            });
+
+        });
+        System.out.println(flumeData.getMsg() + "处理结束");
+//        tHsKafkaLogInfoService.deleteById(flumeData.getId());
+//        DataOffset.deleteFile("kafka", record.topic() + "-" + record.partition() + "-" + record.offset());
+        KafkaFlumeCustomerTask.COUNT.decrementAndGet();
     }
 
+
     /**
-     * 外部处理
-     * @param flumeData
+     * 过滤处理
      */
-    public void testFilter(FlumeData flumeData) {
+    private Object todoFilter(FlumeData flumeData, THsFilterRulesInfo tHsFilterRulesInfo) {
+        FilterDto filterDto = JSONObject.parseObject(tHsFilterRulesInfo.getFilterGroupUuid(), FilterDto.class);
+        String filterName = tHsFilterRulesInfo.getUuid() + "-" + filterDto.getHolmesFilterName();
         // 生产过滤器
-        if (!FilterContext.isExist("TestFilter")) {
-            Class<HolmesFilterAbstract> aClass = (Class<HolmesFilterAbstract>) ClassloadUtils.getClassloadUtils().tryGetClass("com.shuzheng.holmes.core.filter.TestFilter");
+        if (!FilterContext.isExist(filterName)) {
+            Class<HolmesFilterAbstract> aClass = (Class<HolmesFilterAbstract>) ClassloadUtils.getClassloadUtils().tryGetClass(filterDto.getClassPath());
             if (aClass == null) {
                 aClass = (Class<HolmesFilterAbstract>) ClassloadUtils.getClassloadUtils().classLoadFromJavaFile(
-                        "com.shuzheng.holmes.core.filter.TestFilter",
-                        "C:\\Users\\WIN10\\Desktop\\jar\\TestFilter.java",
-                        "C:\\Users\\WIN10\\Desktop\\jar\\holmes-core-1.0-SNAPSHOT.jar;C:\\Users\\WIN10\\Desktop\\jar\\fastjson-1.2.61.jar");
+                        filterDto.getClassName(),
+                        filterDto.getJavaPath(),
+                        filterDto.getClassPath());
             }
             ConfigContext configContext = new ConfigContext();
-            configContext.put("regular", "\\d{15}(\\d{2}[0-9xX])?");
-            HolmesFilterFactory.createAndRegister(aClass, "TestFilter", configContext, FilterTypeEnums.JAVA);
-
+            configContext.getSubProperties(tHsFilterRulesInfo.getConfig());
+            HolmesFilterFactory.createAndRegister(aClass, filterName, configContext, FilterTypeEnums.valueOf(tHsFilterRulesInfo.getType()));
         }
         // 执行过滤器
-        HolmesFilter filter = FilterContext.getFilter("TestFilter");
-        Object dasdsds = filter.filter("{\"id\":\"1\",\"name\":\"" + flumeData.getMsg() + "\"}");
-        // 执行处理器
-        if ((boolean)dasdsds){
-            if (!DealContext.isExist("AlertDeal")) {
-                ConfigContext configContext = new ConfigContext();
-                configContext.put("regular", "\\d{15}(\\d{2}[0-9xX])?");
-                Class<HolmesDealAbstract> aClass = (Class<HolmesDealAbstract>) ClassloadUtils.getClassloadUtils().tryGetClass("com.shuzheng.holmes.core.deal.AlertDeal");
-
-                HolmesDealFactory.createAndRegister(aClass, "AlertDeal", configContext, DealTypeEnums.JAVA);
-            }
-            HolmesDeal alertDeal = DealContext.getDeal("AlertDeal");
-            alertDeal.deal(flumeData.getMsg());
-        }
+        HolmesFilter holmesFilter = FilterContext.getFilter(filterName);
+        return holmesFilter.filter(flumeData.getMsg());
     }
 
     /**
-     * 内置处理
-     * @param flumeData
+     * 执行处理
      */
-    public void regularFilter(FlumeData flumeData) {
-        if (!FilterContext.isExist("RegularFilter")) {
+    private void todoDeal(Object object, THsDealRulesInfo tHsDealRulesInfo) {
+        DealDto dealDto = JSONObject.parseObject(tHsDealRulesInfo.getContext(), DealDto.class);
+        String dealName = tHsDealRulesInfo.getUuid() + "-" + dealDto.getHolmesDealName();
+        if (!DealContext.isExist(dealName)) {
+            Class<HolmesDealAbstract> aClass = (Class<HolmesDealAbstract>) ClassloadUtils.getClassloadUtils().tryGetClass(dealDto.getClassPath());
+            if (aClass == null) {
+                aClass = (Class<HolmesDealAbstract>) ClassloadUtils.getClassloadUtils().classLoadFromJavaFile(
+                        dealDto.getClassName(),
+                        dealDto.getJavaPath(),
+                        dealDto.getClassPath());
+            }
             ConfigContext configContext = new ConfigContext();
-            configContext.put("regular", "\\d{15}(\\d{2}[0-9xX])?");
-            Class<HolmesFilterAbstract> aClass = (Class<HolmesFilterAbstract>) ClassloadUtils.getClassloadUtils().tryGetClass("com.shuzheng.holmes.core.filter.RegularFilter");
-
-            HolmesFilterFactory.createAndRegister(aClass, "RegularFilter", configContext, FilterTypeEnums.JAVA);
+            configContext.getSubProperties(tHsDealRulesInfo.getConfig());
+            HolmesDealFactory.createAndRegister(aClass, dealName, configContext, DealTypeEnums.valueOf(tHsDealRulesInfo.getType()));
         }
-        HolmesFilter filter = FilterContext.getFilter("RegularFilter");
-        Object dasdsds = filter.filter(flumeData.getMsg());
         // 执行处理器
-        System.out.println(dasdsds);
+        HolmesDeal alertDeal = DealContext.getDeal(dealName);
+        alertDeal.deal(object);
     }
 
 

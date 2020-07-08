@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shuzheng.holmes.dao.mapper.THsDealRulesGroupMapper">
+  <resultMap id="BaseResultMap" type="com.shuzheng.holmes.common.entity.THsDealRulesGroup">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+    <result column="data_uuid" jdbcType="VARCHAR" property="dataUuid" />
+    <result column="is_effective" jdbcType="TINYINT" property="isEffective" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+</mapper>

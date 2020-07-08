@@ -1,5 +1,7 @@
 package com.shuzheng.holmes.core.filter;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,14 +43,14 @@ public class RegularFilter extends HolmesFilterAbstract {
     @Override
     public Object filter(Object msg) {
         String regular = getConfigContext().getString(REGULAR);
-
         String match = null;
         Matcher m = matcher(regular, msg.toString());
         while (m.find()) {
             match = m.group().trim();
             break;
         }
-        return match;
+        System.out.println(JSONObject.toJSONString(match));
+        return JSONObject.toJSONString(match);
     }
 
 }

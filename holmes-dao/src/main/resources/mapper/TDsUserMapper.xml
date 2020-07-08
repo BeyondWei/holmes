@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shuzheng.holmes.dao.mapper.TDsUserMapper">
+  <resultMap id="BaseResultMap" type="com.shuzheng.holmes.common.entity.TDsUser">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
+    <result column="user_type" jdbcType="TINYINT" property="userType" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="tenant_id" jdbcType="INTEGER" property="tenantId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="queue" jdbcType="VARCHAR" property="queue" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+</mapper>

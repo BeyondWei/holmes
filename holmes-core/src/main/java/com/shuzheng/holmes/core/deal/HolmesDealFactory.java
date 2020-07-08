@@ -2,7 +2,7 @@ package com.shuzheng.holmes.core.deal;
 
 import com.shuzheng.holmes.core.context.ConfigContext;
 import com.shuzheng.holmes.core.enums.DealTypeEnums;
-import com.sun.istack.internal.NotNull;
+import lombok.NonNull;
 
 public class HolmesDealFactory {
 
@@ -16,9 +16,9 @@ public class HolmesDealFactory {
      * @return
      */
     public static HolmesDealAbstract createDeal(Class<? extends HolmesDealAbstract> holmesDealAbstractClass,
-                                                    @NotNull String dealName,
-                                                    ConfigContext configContext,
-                                                    DealTypeEnums dealTypeEnums) {
+                                                @NonNull String dealName,
+                                                ConfigContext configContext,
+                                                DealTypeEnums dealTypeEnums) {
         HolmesDealAbstract holmesDeal = null;
         try {
             holmesDeal = holmesDealAbstractClass.newInstance();
@@ -34,17 +34,16 @@ public class HolmesDealFactory {
     }
 
     /**
-     *
      * @param holmesDealAbstractClass
      * @param dealName
      * @param configContext
      * @param dealTypeEnums
      */
     public static void createAndRegister(Class<? extends HolmesDealAbstract> holmesDealAbstractClass,
-                                                          @NotNull String dealName,
-                                                          ConfigContext configContext,
-                                                          DealTypeEnums dealTypeEnums) {
-        createDeal(holmesDealAbstractClass,dealName,configContext,dealTypeEnums).register();
+                                         @NonNull String dealName,
+                                         ConfigContext configContext,
+                                         DealTypeEnums dealTypeEnums) {
+        createDeal(holmesDealAbstractClass, dealName, configContext, dealTypeEnums).register();
     }
 
 }

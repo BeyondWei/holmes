@@ -1,6 +1,6 @@
 package com.shuzheng.holmes.core.enums;
 
-public enum  FilterTypeEnums {
+public enum FilterTypeEnums {
 
-    JAVA,SHELL,PATHON
+    JAVA,SHELL,PATHON;
 }
