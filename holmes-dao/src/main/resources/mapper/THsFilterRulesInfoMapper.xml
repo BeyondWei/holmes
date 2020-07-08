@@ -8,6 +8,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="filter_group_uuid" jdbcType="VARCHAR" property="filterGroupUuid" />
     <result column="deal_group_uuid" jdbcType="VARCHAR" property="dealGroupUuid" />
+    <result column="parent_uuid" jdbcType="VARCHAR" property="parentUuid" />
     <result column="uuid" jdbcType="VARCHAR" property="uuid" />
     <result column="rules_name" jdbcType="VARCHAR" property="rulesName" />
     <result column="note" jdbcType="VARCHAR" property="note" />
@@ -17,8 +18,7 @@
     <result column="is_effective" jdbcType="TINYINT" property="isEffective" />
     <result column="context" jdbcType="LONGVARCHAR" property="context" />
   </resultMap>
-    <select id="getTHsFilterRulesInfoByFilterGroupUuid"
-            resultType="com.shuzheng.holmes.common.entity.THsFilterRulesInfo">
+    <select id="getTHsFilterRulesInfoByFilterGroupUuid" resultType="com.shuzheng.holmes.common.entity.THsFilterRulesInfo">
       SELECT
           t2.*
       FROM

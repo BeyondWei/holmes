@@ -29,11 +29,11 @@
         <javaClientGenerator targetPackage="com.shuzheng.holmes.dao.mapper" targetProject="../holmes-dao/src/main/java" type="XMLMAPPER"/>
 
         <!-- 要生成的那些表 -->
-        <table tableName="%" >
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
-<!--        <table tableName="matter_info" >-->
+<!--        <table tableName="%" >-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
+        <table tableName="t_hs_filter_rules_info" >
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
     </context>
 </generatorConfiguration>

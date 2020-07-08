@@ -25,6 +25,12 @@ public class THsFilterRulesInfo {
     private String dealGroupUuid;
 
     /**
+     * 父级规则
+     */
+    @Column(name = "parent_uuid")
+    private String parentUuid;
+
+    /**
      * 规则uuid
      */
     private String uuid;
@@ -119,6 +125,24 @@ public class THsFilterRulesInfo {
      */
     public void setDealGroupUuid(String dealGroupUuid) {
         this.dealGroupUuid = dealGroupUuid;
+    }
+
+    /**
+     * 获取父级规则
+     *
+     * @return parent_uuid - 父级规则
+     */
+    public String getParentUuid() {
+        return parentUuid;
+    }
+
+    /**
+     * 设置父级规则
+     *
+     * @param parentUuid 父级规则
+     */
+    public void setParentUuid(String parentUuid) {
+        this.parentUuid = parentUuid;
     }
 
     /**
