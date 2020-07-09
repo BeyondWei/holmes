@@ -25,10 +25,9 @@ public class THsFilterRulesInfo {
     private String dealGroupUuid;
 
     /**
-     * 父级规则
+     * 执行顺序
      */
-    @Column(name = "parent_uuid")
-    private String parentUuid;
+    private Integer order;
 
     /**
      * 规则uuid
@@ -128,21 +127,21 @@ public class THsFilterRulesInfo {
     }
 
     /**
-     * 获取父级规则
+     * 获取执行顺序
      *
-     * @return parent_uuid - 父级规则
+     * @return order - 执行顺序
      */
-    public String getParentUuid() {
-        return parentUuid;
+    public Integer getOrder() {
+        return order;
     }
 
     /**
-     * 设置父级规则
+     * 设置执行顺序
      *
-     * @param parentUuid 父级规则
+     * @param order 执行顺序
      */
-    public void setParentUuid(String parentUuid) {
-        this.parentUuid = parentUuid;
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 
     /**

@@ -16,7 +16,7 @@ public class RegularFilterTest {
         HolmesFilterFactory.createAndRegister(RegularFilter.class,"", configContext, FilterTypeEnums.JAVA);
 
         HolmesFilter filter = FilterContext.getFilter("com.shuzheng.holmes.core.filter.RegularFilter");
-        Object filter1 = filter.filter("qqq330483199702045415qqq");
+        Object filter1 = filter.run("qqq330483199702045415qqq");
         System.out.println(filter1.toString());
     }
 }

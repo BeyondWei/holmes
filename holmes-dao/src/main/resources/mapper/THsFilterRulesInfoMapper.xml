@@ -8,7 +8,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="filter_group_uuid" jdbcType="VARCHAR" property="filterGroupUuid" />
     <result column="deal_group_uuid" jdbcType="VARCHAR" property="dealGroupUuid" />
-    <result column="parent_uuid" jdbcType="VARCHAR" property="parentUuid" />
+    <result column="order" jdbcType="INTEGER" property="order" />
     <result column="uuid" jdbcType="VARCHAR" property="uuid" />
     <result column="rules_name" jdbcType="VARCHAR" property="rulesName" />
     <result column="note" jdbcType="VARCHAR" property="note" />
@@ -18,13 +18,15 @@
     <result column="is_effective" jdbcType="TINYINT" property="isEffective" />
     <result column="context" jdbcType="LONGVARCHAR" property="context" />
   </resultMap>
-    <select id="getTHsFilterRulesInfoByFilterGroupUuid" resultType="com.shuzheng.holmes.common.entity.THsFilterRulesInfo">
+    <select id="getTHsFilterRulesInfoByFilterGroupUuidAndLogUuid" resultMap="BaseResultMap">
       SELECT
           t2.*
       FROM
           t_hs_filter_rules_group t1
           LEFT JOIN t_hs_filter_rules_info t2 ON t1.uuid = t2.filter_group_uuid
           WHERE t2.is_effective = 0 and t1.is_effective = 0
-          and t1.log_uuid =#{filterGroupUuid}
+          and t1.log_uuid =#{logUuid}
+          and t2.filter_group_uuid =#{filterGroupUuid}
+          order by `order`
     </select>
 </mapper>

@@ -45,7 +45,7 @@ public class DataSourceConfig {
         bean.setDataSource(dataSource);
         bean.setPlugins(new Interceptor[]{new PageHelper()});
         bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml"));
-        bean.setTypeAliasesPackage("com.sztech.mario.common.entity");
+        bean.setTypeAliasesPackage("com.shuzheng.holmes.common.entity");
         return bean.getObject();
     }
 

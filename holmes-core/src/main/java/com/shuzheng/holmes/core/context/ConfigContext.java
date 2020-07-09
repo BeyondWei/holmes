@@ -1,5 +1,6 @@
 package com.shuzheng.holmes.core.context;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -75,6 +76,10 @@ public class ConfigContext {
             }
         }
         return ImmutableMap.copyOf(result);
+    }
+
+    public void getJsonProperties(String jsonString) {
+        parameters.putAll(JSONObject.parseObject(jsonString,Map.class));
     }
 
     /**

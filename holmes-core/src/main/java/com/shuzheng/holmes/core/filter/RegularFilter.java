@@ -1,13 +1,13 @@
 package com.shuzheng.holmes.core.filter;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.ImmutableMap;
 
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegularFilter extends HolmesFilterAbstract {
-
-    private static final String REGULAR = "regular";
 
     /**
      * 编译一个正则表达式
@@ -42,15 +42,16 @@ public class RegularFilter extends HolmesFilterAbstract {
      */
     @Override
     public Object filter(Object msg) {
-        String regular = getConfigContext().getString(REGULAR);
-        String match = null;
-        Matcher m = matcher(regular, msg.toString());
-        while (m.find()) {
-            match = m.group().trim();
-            break;
-        }
-        System.out.println(JSONObject.toJSONString(match));
-        return JSONObject.toJSONString(match);
+        HashMap hashMap = new HashMap<>();
+        ImmutableMap<String, String> parameters = configContext.getParameters();
+        parameters.forEach((key, value) -> {
+            Matcher m = matcher(value, msg.toString());
+            while (m.find()) {
+                hashMap.put(key, m.group().trim());
+                break;
+            }
+        });
+        return hashMap;
     }
 
 }

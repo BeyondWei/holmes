@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface THsFilterRulesInfoMapper extends TkMybatisMapper<THsFilterRulesInfo> {
 
-    List<THsFilterRulesInfo> getTHsFilterRulesInfoByFilterGroupUuid(@Param("filterGroupUuid") String filterGroupUuid);
+    List<THsFilterRulesInfo> getTHsFilterRulesInfoByFilterGroupUuidAndLogUuid(@Param("filterGroupUuid") String filterGroupUuid,@Param("logUuid") String logUuid);
+
 }

@@ -16,8 +16,7 @@
     <result column="is_effective" jdbcType="TINYINT" property="isEffective" />
     <result column="context" jdbcType="LONGVARCHAR" property="context" />
   </resultMap>
-    <select id="getTHsDealRulesInfoByDealGroupUuid"
-            resultType="com.shuzheng.holmes.common.entity.THsDealRulesInfo">
+    <select id="getTHsDealRulesInfoByDealGroupUuid" resultMap="BaseResultMap">
       SELECT
           t2.*
       FROM

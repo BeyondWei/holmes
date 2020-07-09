@@ -3,6 +3,7 @@ package com.shuzheng.holmes.server.task;
 import com.shuzheng.holmes.common.Constants;
 import com.shuzheng.holmes.common.dto.FlumeData;
 import com.shuzheng.holmes.common.utils.FlumeAvroUtils;
+import com.shuzheng.holmes.common.utils.SpringUtil;
 import com.shuzheng.holmes.common.utils.StringUtils;
 import com.shuzheng.holmes.common.utils.ThreadPoolFactory;
 import com.shuzheng.holmes.service.bussiness.BusHolmesServerService;
@@ -41,7 +42,7 @@ public class KafkaFlumeCustomerTask implements ApplicationListener<ContextRefres
     @KafkaListener(topics = "netcat", id = "kafkaListener")
     public void run(ConsumerRecord<Integer, String> record) {
 
-        System.out.println(record.offset() + " ========= " + df.format(new Date()));
+//        System.out.println(record.offset() + " ========= " + df.format(new Date()));
         // todo 如何防止数据丢失
 //        tHsKafkaLogInfoService.insertNotNull(tHsKafkaLogInfo);
 //        DataOffset.creatFile("kafka", record.topic() + "-" + record.partition() + "-" + record.offset(), record.value());

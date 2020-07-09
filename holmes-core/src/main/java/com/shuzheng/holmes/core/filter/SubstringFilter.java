@@ -23,6 +23,6 @@ public class SubstringFilter extends HolmesFilterAbstract {
             }
             hashMap.put(key, m);
         });
-        return JSONObject.toJSONString(hashMap);
+        return hashMap;
     }
 }

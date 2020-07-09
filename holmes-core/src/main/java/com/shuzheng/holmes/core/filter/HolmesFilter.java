@@ -16,9 +16,9 @@ public interface HolmesFilter {
     String getFilterName();
 
     /**
-     * 过滤器实现
+     * 过滤器执行
      */
-    Object filter(Object msg);
+    Object run(Object msg);
 
 }
 

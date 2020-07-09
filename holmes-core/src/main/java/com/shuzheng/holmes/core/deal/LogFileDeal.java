@@ -21,8 +21,8 @@ public class LogFileDeal extends HolmesDealAbstract {
         FileWriter fileWriter = null;
         try {
             file.createNewFile();
-            fileWriter = new FileWriter(file);
-            fileWriter.write(msg.toString());
+            fileWriter = new FileWriter(file, true);
+            fileWriter.write("\n" + msg.toString());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

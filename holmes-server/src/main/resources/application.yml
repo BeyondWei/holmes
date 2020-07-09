@@ -25,3 +25,19 @@ datasource:
     username: root
     password: haha@123456
     validation-query: SELECT 1 FROM DUAL
+
+
+#############tk.Mybatis插件配置
+mapper:
+  mappers: com.shuzheng.holmes.dao.plugin.TkMybatisMapper
+  not-empty: false
+  identity: MYSQL
+
+#pagehelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+  offset-as-page-num: true
+  row-bounds-with-count: true

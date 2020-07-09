@@ -9,7 +9,6 @@
     <result column="uuid" jdbcType="VARCHAR" property="uuid" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="note" jdbcType="VARCHAR" property="note" />
-    <result column="data_uuid" jdbcType="VARCHAR" property="dataUuid" />
     <result column="is_effective" jdbcType="TINYINT" property="isEffective" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>

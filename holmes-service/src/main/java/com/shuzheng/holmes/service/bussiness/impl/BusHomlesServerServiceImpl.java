@@ -1,17 +1,17 @@
 package com.shuzheng.holmes.service.bussiness.impl;
 
-import com.shuzheng.holmes.common.Constants;
 import com.shuzheng.holmes.common.ConstantsEnum;
 import com.shuzheng.holmes.common.entity.*;
 import com.shuzheng.holmes.service.bussiness.BusHolmesServerService;
 import com.shuzheng.holmes.service.db.*;
-import com.shuzheng.holmes.service.plugin.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Cacheable(value = "holmes-server")
 public class BusHomlesServerServiceImpl implements BusHolmesServerService {
 
     @Autowired
@@ -32,18 +32,14 @@ public class BusHomlesServerServiceImpl implements BusHolmesServerService {
     @Autowired
     private THsExFlumeSourceInfoService tHsExFlumeSourceInfoService;
 
-
     @Override
-    public List<THsFilterRulesGroup> getFilterRulesGroupByLogUuid(String logUuid) {
-        THsFilterRulesGroup tHsFilterRulesGroup = new THsFilterRulesGroup();
-        tHsFilterRulesGroup.setIsEffective(ConstantsEnum.DATA_STATUS.DELETE.getStatus());
-        tHsFilterRulesGroup.setLogUuid(logUuid);
-        return tHsFilterRulesGroupService.select(tHsFilterRulesGroup);
+    public List<THsFilterRulesGroup> getFilterRulesGroupByProjectUuid(String projectUuid) {
+        return tHsFilterRulesGroupService.getFilterRulesGroupByProjectUuid(projectUuid);
     }
 
     @Override
-    public List<THsFilterRulesInfo> getTHsFilterRulesInfoByFilterGroupUuid(String logUuid) {
-        return tHsFilterRulesInfoService.getTHsFilterRulesInfoByFilterGroupUuid(logUuid);
+    public List<THsFilterRulesInfo> getTHsFilterRulesInfoByFilterGroupUuidAndlogUuid(String filterGroupUuid, String logUuid) {
+        return tHsFilterRulesInfoService.getTHsFilterRulesInfoByFilterGroupUuidAndLogUuid(filterGroupUuid, logUuid);
     }
 
     @Override

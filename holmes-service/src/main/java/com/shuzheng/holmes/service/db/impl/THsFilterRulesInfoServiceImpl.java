@@ -16,7 +16,7 @@ public class THsFilterRulesInfoServiceImpl extends BaseServiceImpl<THsFilterRule
     private THsFilterRulesInfoMapper tHsFilterRulesInfoMapper;
 
     @Override
-    public List<THsFilterRulesInfo> getTHsFilterRulesInfoByFilterGroupUuid(String filterGroupUuid) {
-        return tHsFilterRulesInfoMapper.getTHsFilterRulesInfoByFilterGroupUuid(filterGroupUuid);
+    public List<THsFilterRulesInfo> getTHsFilterRulesInfoByFilterGroupUuidAndLogUuid(String filterGroupUuid, String logUuid) {
+        return tHsFilterRulesInfoMapper.getTHsFilterRulesInfoByFilterGroupUuidAndLogUuid(filterGroupUuid,logUuid);
     }
 }

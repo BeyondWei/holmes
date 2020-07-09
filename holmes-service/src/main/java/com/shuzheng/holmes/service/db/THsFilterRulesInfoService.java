@@ -10,5 +10,5 @@ public interface THsFilterRulesInfoService extends BaseService<THsFilterRulesInf
     /**
      * 获取一组过滤信息
      */
-    List<THsFilterRulesInfo> getTHsFilterRulesInfoByFilterGroupUuid(String filterGroupUuid);
+    List<THsFilterRulesInfo> getTHsFilterRulesInfoByFilterGroupUuidAndLogUuid(String filterGroupUuid,String logUuid);
 }

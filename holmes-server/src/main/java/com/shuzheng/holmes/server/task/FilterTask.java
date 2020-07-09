@@ -45,21 +45,31 @@ public class FilterTask implements Runnable {
     public void run() {
         BusHolmesServerService busHolmesServerService = SpringUtil.getBean(BusHolmesServerService.class);
         String logUuid = flumeData.getHeaderMap().get(Constants.FLUME_LOG_UUID);
-        List<THsFilterRulesInfo> tHsFilterRulesInfoByFilterGroupUuid = busHolmesServerService.getTHsFilterRulesInfoByFilterGroupUuid(flumeData.getHeaderMap().get(logUuid));
+        String projectUuid = flumeData.getHeaderMap().get(Constants.FLUME_PROJECT_UUID);
 
-        tHsFilterRulesInfoByFilterGroupUuid.forEach(tHsFilterRulesInfo -> {
-            // filter 执行
-            Object res = todoFilter(flumeData, tHsFilterRulesInfo);
+        // 获取不同的过滤组
+        List<THsFilterRulesGroup> filterRulesGroupByProjectUuid = busHolmesServerService.getFilterRulesGroupByProjectUuid(projectUuid);
+        // 分别执行不同的过滤组
+        filterRulesGroupByProjectUuid.forEach(filterRulesGroup -> {
+            List<THsFilterRulesInfo> tHsFilterRulesInfoByFilterGroupUuid = busHolmesServerService.getTHsFilterRulesInfoByFilterGroupUuidAndlogUuid(filterRulesGroup.getUuid(), logUuid);
 
-            // deal 执行
-            String dealGroupUuid = tHsFilterRulesInfo.getDealGroupUuid();
-            List<THsDealRulesInfo> tHsDealRulesInfoByDealGroupUuid = busHolmesServerService.getTHsDealRulesInfoByDealGroupUuid(dealGroupUuid);
-            tHsDealRulesInfoByDealGroupUuid.forEach(tHsDealRulesInfo -> {
-                todoDeal(res, tHsDealRulesInfo);
-            });
+            // 按顺序执行
+            Object res = flumeData.getMsg();
+            for (THsFilterRulesInfo tHsFilterRulesInfo : tHsFilterRulesInfoByFilterGroupUuid) {
+                // filter 执行
+                res = todoFilter(res, tHsFilterRulesInfo);
 
+                // deal 执行
+                String dealGroupUuid = tHsFilterRulesInfo.getDealGroupUuid();
+                List<THsDealRulesInfo> tHsDealRulesInfoByDealGroupUuid = busHolmesServerService.getTHsDealRulesInfoByDealGroupUuid(dealGroupUuid);
+                Object finalRes = res;
+                tHsDealRulesInfoByDealGroupUuid.forEach(tHsDealRulesInfo -> {
+                    todoDeal(finalRes, tHsDealRulesInfo);
+                });
+            }
         });
-        System.out.println(flumeData.getMsg() + "处理结束");
+
+//        System.out.println(flumeData.getMsg() + "处理结束");
 //        tHsKafkaLogInfoService.deleteById(flumeData.getId());
 //        DataOffset.deleteFile("kafka", record.topic() + "-" + record.partition() + "-" + record.offset());
         KafkaFlumeCustomerTask.COUNT.decrementAndGet();
@@ -69,12 +79,12 @@ public class FilterTask implements Runnable {
     /**
      * 过滤处理
      */
-    private Object todoFilter(FlumeData flumeData, THsFilterRulesInfo tHsFilterRulesInfo) {
-        FilterDto filterDto = JSONObject.parseObject(tHsFilterRulesInfo.getFilterGroupUuid(), FilterDto.class);
+    private Object todoFilter(Object msg, THsFilterRulesInfo tHsFilterRulesInfo) {
+        FilterDto filterDto = JSONObject.parseObject(tHsFilterRulesInfo.getContext(), FilterDto.class);
         String filterName = tHsFilterRulesInfo.getUuid() + "-" + filterDto.getHolmesFilterName();
         // 生产过滤器
         if (!FilterContext.isExist(filterName)) {
-            Class<HolmesFilterAbstract> aClass = (Class<HolmesFilterAbstract>) ClassloadUtils.getClassloadUtils().tryGetClass(filterDto.getClassPath());
+            Class<HolmesFilterAbstract> aClass = (Class<HolmesFilterAbstract>) ClassloadUtils.getClassloadUtils().tryGetClass(filterDto.getClassName());
             if (aClass == null) {
                 aClass = (Class<HolmesFilterAbstract>) ClassloadUtils.getClassloadUtils().classLoadFromJavaFile(
                         filterDto.getClassName(),
@@ -82,12 +92,12 @@ public class FilterTask implements Runnable {
                         filterDto.getClassPath());
             }
             ConfigContext configContext = new ConfigContext();
-            configContext.getSubProperties(tHsFilterRulesInfo.getConfig());
+            configContext.getJsonProperties(tHsFilterRulesInfo.getConfig());
             HolmesFilterFactory.createAndRegister(aClass, filterName, configContext, FilterTypeEnums.valueOf(tHsFilterRulesInfo.getType()));
         }
         // 执行过滤器
         HolmesFilter holmesFilter = FilterContext.getFilter(filterName);
-        return holmesFilter.filter(flumeData.getMsg());
+        return holmesFilter.run(msg);
     }
 
     /**
@@ -97,7 +107,7 @@ public class FilterTask implements Runnable {
         DealDto dealDto = JSONObject.parseObject(tHsDealRulesInfo.getContext(), DealDto.class);
         String dealName = tHsDealRulesInfo.getUuid() + "-" + dealDto.getHolmesDealName();
         if (!DealContext.isExist(dealName)) {
-            Class<HolmesDealAbstract> aClass = (Class<HolmesDealAbstract>) ClassloadUtils.getClassloadUtils().tryGetClass(dealDto.getClassPath());
+            Class<HolmesDealAbstract> aClass = (Class<HolmesDealAbstract>) ClassloadUtils.getClassloadUtils().tryGetClass(dealDto.getClassName());
             if (aClass == null) {
                 aClass = (Class<HolmesDealAbstract>) ClassloadUtils.getClassloadUtils().classLoadFromJavaFile(
                         dealDto.getClassName(),
@@ -105,7 +115,7 @@ public class FilterTask implements Runnable {
                         dealDto.getClassPath());
             }
             ConfigContext configContext = new ConfigContext();
-            configContext.getSubProperties(tHsDealRulesInfo.getConfig());
+            configContext.getJsonProperties(tHsDealRulesInfo.getConfig());
             HolmesDealFactory.createAndRegister(aClass, dealName, configContext, DealTypeEnums.valueOf(tHsDealRulesInfo.getType()));
         }
         // 执行处理器
