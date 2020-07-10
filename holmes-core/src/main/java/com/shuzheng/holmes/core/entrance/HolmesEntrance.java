@@ -17,8 +17,4 @@ public interface HolmesEntrance {
      */
     void postProcessing();
 
-    /**
-     * 数据接收补充处理
-     */
-    void supplement();
 }

@@ -1,13 +1,18 @@
 package com.shuzheng.holmes.core.entrance;
 
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class HolmesEntranceAbstract implements HolmesEntrance {
+public abstract class HolmesEntranceAbstract implements HolmesEntrance, ApplicationListener<ContextRefreshedEvent> {
+
+    protected static AtomicInteger COUNT = new AtomicInteger(0);
 
     protected long delay = 0;
     protected long intevalPeriod = 1000;
-    protected boolean isOpenTimer = false;
 
 
     public void start(Object... o) {
@@ -16,16 +21,10 @@ public abstract class HolmesEntranceAbstract implements HolmesEntrance {
 
         postProcessing();
 
-        if (isOpenTimer) {
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    supplement();
-                }
-            };
-            Timer timer = new Timer();
-            timer.scheduleAtFixedRate(timerTask, delay, intevalPeriod);
-        }
     }
 
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        new Thread(()->init()).start();
+    }
 }

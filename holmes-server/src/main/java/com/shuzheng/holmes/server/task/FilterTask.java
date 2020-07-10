@@ -2,7 +2,7 @@ package com.shuzheng.holmes.server.task;
 
 import com.alibaba.fastjson.JSONObject;
 import com.shuzheng.holmes.common.Constants;
-import com.shuzheng.holmes.common.dto.FlumeData;
+import com.shuzheng.holmes.common.dto.DataFormat;
 import com.shuzheng.holmes.common.entity.THsDealRulesInfo;
 import com.shuzheng.holmes.common.entity.THsFilterRulesGroup;
 import com.shuzheng.holmes.common.entity.THsFilterRulesInfo;
@@ -25,54 +25,58 @@ import com.shuzheng.holmes.service.bussiness.BusHolmesServerService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FilterTask implements Runnable {
     private ConsumerRecord<Integer, String> record;
-    private FlumeData flumeData;
+    private DataFormat dataFormat;
     private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private AtomicInteger atomicInteger;
 
-    public FilterTask(FlumeData flumeData, ConsumerRecord<Integer, String> record) {
-        this.record = record;
-        this.flumeData = flumeData;
+    public FilterTask(DataFormat dataFormat,AtomicInteger atomicInteger) {
+        this.dataFormat = dataFormat;
+        this.atomicInteger = atomicInteger;
     }
 
-    public FilterTask(FlumeData flumeData) {
-        this.flumeData = flumeData;
-    }
 
     @Override
     public void run() {
         BusHolmesServerService busHolmesServerService = SpringUtil.getBean(BusHolmesServerService.class);
-        String logUuid = flumeData.getHeaderMap().get(Constants.FLUME_LOG_UUID);
-        String projectUuid = flumeData.getHeaderMap().get(Constants.FLUME_PROJECT_UUID);
+        String logUuid = dataFormat.getHeaderMap().get(Constants.HOLMES_LOG_UUID);
+        String projectUuid = dataFormat.getHeaderMap().get(Constants.HOLMES_PROJECT_UUID);
 
         // 获取不同的过滤组
         List<THsFilterRulesGroup> filterRulesGroupByProjectUuid = busHolmesServerService.getFilterRulesGroupByProjectUuid(projectUuid);
         // 分别执行不同的过滤组
         filterRulesGroupByProjectUuid.forEach(filterRulesGroup -> {
-            List<THsFilterRulesInfo> tHsFilterRulesInfoByFilterGroupUuid = busHolmesServerService.getTHsFilterRulesInfoByFilterGroupUuidAndlogUuid(filterRulesGroup.getUuid(), logUuid);
 
-            // 按顺序执行
-            Object res = flumeData.getMsg();
-            for (THsFilterRulesInfo tHsFilterRulesInfo : tHsFilterRulesInfoByFilterGroupUuid) {
-                // filter 执行
-                res = todoFilter(res, tHsFilterRulesInfo);
+            new Thread(() -> {
+                List<THsFilterRulesInfo> tHsFilterRulesInfoByFilterGroupUuid = busHolmesServerService.getTHsFilterRulesInfoByFilterGroupUuidAndlogUuid(filterRulesGroup.getUuid(), logUuid);
 
-                // deal 执行
-                String dealGroupUuid = tHsFilterRulesInfo.getDealGroupUuid();
-                List<THsDealRulesInfo> tHsDealRulesInfoByDealGroupUuid = busHolmesServerService.getTHsDealRulesInfoByDealGroupUuid(dealGroupUuid);
-                Object finalRes = res;
-                tHsDealRulesInfoByDealGroupUuid.forEach(tHsDealRulesInfo -> {
-                    todoDeal(finalRes, tHsDealRulesInfo);
-                });
-            }
+                // 按顺序执行
+                Object res = dataFormat.getMsg();
+                for (THsFilterRulesInfo tHsFilterRulesInfo : tHsFilterRulesInfoByFilterGroupUuid) {
+                    // filter 执行
+                    res = todoFilter(res, tHsFilterRulesInfo);
+
+                    // deal 执行
+                    String dealGroupUuid = tHsFilterRulesInfo.getDealGroupUuid();
+                    List<THsDealRulesInfo> tHsDealRulesInfoByDealGroupUuid = busHolmesServerService.getTHsDealRulesInfoByDealGroupUuid(dealGroupUuid);
+                    Object finalRes = res;
+                    tHsDealRulesInfoByDealGroupUuid.forEach(tHsDealRulesInfo -> {
+                        todoDeal(finalRes, tHsDealRulesInfo);
+                    });
+                }
+            }).start();
         });
 
 //        System.out.println(flumeData.getMsg() + "处理结束");
 //        tHsKafkaLogInfoService.deleteById(flumeData.getId());
 //        DataOffset.deleteFile("kafka", record.topic() + "-" + record.partition() + "-" + record.offset());
-        KafkaFlumeCustomerTask.COUNT.decrementAndGet();
+        atomicInteger.decrementAndGet();
+        HttpEntranceTask.atomicInteger.incrementAndGet();
     }
 
 

@@ -1,9 +1,8 @@
 package com.shuzheng.holmes.server.task;
 
 import com.shuzheng.holmes.common.Constants;
-import com.shuzheng.holmes.common.dto.FlumeData;
+import com.shuzheng.holmes.common.dto.DataFormat;
 import com.shuzheng.holmes.common.utils.FlumeAvroUtils;
-import com.shuzheng.holmes.common.utils.SpringUtil;
 import com.shuzheng.holmes.common.utils.StringUtils;
 import com.shuzheng.holmes.common.utils.ThreadPoolFactory;
 import com.shuzheng.holmes.service.bussiness.BusHolmesServerService;
@@ -18,7 +17,6 @@ import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -37,7 +35,8 @@ public class KafkaFlumeCustomerTask implements ApplicationListener<ContextRefres
 
     private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    protected static final AtomicInteger COUNT = new AtomicInteger(0);
+    protected static AtomicInteger COUNT = new AtomicInteger(0);
+    protected static AtomicInteger atomicInteger = new AtomicInteger(0);
 
     @KafkaListener(topics = "netcat", id = "kafkaListener")
     public void run(ConsumerRecord<Integer, String> record) {
@@ -46,9 +45,9 @@ public class KafkaFlumeCustomerTask implements ApplicationListener<ContextRefres
         // todo 如何防止数据丢失
 //        tHsKafkaLogInfoService.insertNotNull(tHsKafkaLogInfo);
 //        DataOffset.creatFile("kafka", record.topic() + "-" + record.partition() + "-" + record.offset(), record.value());
-        FlumeData flumeData = FlumeAvroUtils.getFlumeData(record.value());
-        String logUuid = flumeData.getHeaderMap().get(Constants.FLUME_LOG_UUID);
-        String projectUuid = flumeData.getHeaderMap().get(Constants.FLUME_PROJECT_UUID);
+        DataFormat flumeData = FlumeAvroUtils.getFlumeData(record.value());
+        String logUuid = flumeData.getHeaderMap().get(Constants.HOLMES_LOG_UUID);
+        String projectUuid = flumeData.getHeaderMap().get(Constants.HOLMES_PROJECT_UUID);
         if (!StringUtils.isEmpty(logUuid) && !StringUtils.isEmpty(projectUuid) && busHolmesServerService.isExist(projectUuid, logUuid)) {
             COUNT.incrementAndGet();
 //            THsKafkaLogInfo tHsKafkaLogInfo = new THsKafkaLogInfo();
@@ -59,28 +58,35 @@ public class KafkaFlumeCustomerTask implements ApplicationListener<ContextRefres
 //            tHsKafkaLogInfo.setOffset(record.offset());
 //            flumeData.setId(tHsKafkaLogInfo.getId());
             ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.getInstance().autoCreate(projectUuid + "-" + logUuid, 10000);
-            FilterTask filterTask = new FilterTask(flumeData);
+            FilterTask filterTask = new FilterTask(flumeData,COUNT);
             threadPoolExecutor.execute(filterTask);
         }
     }
 
 
-    @SneakyThrows
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        while (true) {
-            Thread.sleep(50);
-            if (COUNT.get() < 1000) {
-                if (kafkaListenerEndpointRegistry.getListenerContainer("kafkaListener").isPauseRequested()) {
-                    kafkaListenerEndpointRegistry.getListenerContainer("kafkaListener").resume();
-                    System.out.println("继续");
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            } else {
-                if (!kafkaListenerEndpointRegistry.getListenerContainer("kafkaListener").isPauseRequested()) {
-                    kafkaListenerEndpointRegistry.getListenerContainer("kafkaListener").pause();
-                    System.out.println("暂停");
+                if (COUNT.get() < 1000) {
+                    if (kafkaListenerEndpointRegistry.getListenerContainer("kafkaListener").isPauseRequested()) {
+                        kafkaListenerEndpointRegistry.getListenerContainer("kafkaListener").resume();
+                        System.out.println("继续");
+                    }
+                } else {
+                    if (!kafkaListenerEndpointRegistry.getListenerContainer("kafkaListener").isPauseRequested()) {
+                        kafkaListenerEndpointRegistry.getListenerContainer("kafkaListener").pause();
+                        System.out.println("暂停");
+                    }
                 }
             }
-        }
+        }).start();
+
     }
 }

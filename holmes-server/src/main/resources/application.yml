@@ -1,3 +1,12 @@
+server:
+  servlet:
+    context-path: /holmes
+  port: 8899
+  tomcat:
+    max-threads: 600
+    min-spare-threads: 100
+    accept-count: 700
+    max-connections: 2000
 spring:
   kafka:
     bootstrap-servers: 192.168.5.120:9092,192.168.5.120:9093,192.168.5.120:9094 #kafka的访问地址，多个用","隔开

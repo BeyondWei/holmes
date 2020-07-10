@@ -849,10 +849,10 @@ public final class Constants {
 
 
     /**
-     * flume
+     * dataFormat
      */
-    public static final String FLUME_LOG_UUID = "flume.client.log4j.logUuid";
-    public static final String FLUME_PROJECT_UUID = "flume.client.log4j.projectUuid";
+    public static final String HOLMES_LOG_UUID = "holmes.logUuid";
+    public static final String HOLMES_PROJECT_UUID = "holmes.projectUuid";
 
     /**
      * deal

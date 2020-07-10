@@ -23,7 +23,7 @@ public class Test {
        // String msg = "11111111111111111111111111111111111111111111111111111111111111111";
         logger.debug(msg);
         while (true) {
-            Thread.sleep(1000);
+            Thread.sleep(2);
             // 记录debug级别的信息
             logger.debug(msg);
             i++;
