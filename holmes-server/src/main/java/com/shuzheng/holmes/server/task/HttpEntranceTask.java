@@ -29,7 +29,6 @@ public class HttpEntranceTask extends HolmesEntranceAbstract {
 
     private static final Logger log = LoggerFactory.getLogger(HttpEntranceTask.class);
 
-
     protected static AtomicInteger atomicInteger = new AtomicInteger(0);
 
     @SneakyThrows

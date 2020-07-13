@@ -48,13 +48,14 @@ public abstract class HolmesFilterAbstract implements HolmesFilter {
 
     @Override
     public Object run(Object msg) {
-        results = msg.toString();
         atomicLong.incrementAndGet();
         String hashMapKey = configContext.getString("hashMapKey");
         if (!StringUtils.isEmpty(hashMapKey)) {
             msg = ((HashMap) msg).get(hashMapKey);
         }
-        return filter(msg);
+        Object filter = filter(msg);
+        results = filter.toString();
+        return filter;
     }
 
     public void register() {

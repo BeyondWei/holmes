@@ -1,6 +1,7 @@
 package com.shuzheng.holmes.core.deal;
 
 import com.shuzheng.holmes.core.context.ConfigContext;
+import com.shuzheng.holmes.core.context.DealContext;
 import com.shuzheng.holmes.core.enums.DealTypeEnums;
 import lombok.NonNull;
 
@@ -44,6 +45,16 @@ public class HolmesDealFactory {
                                          ConfigContext configContext,
                                          DealTypeEnums dealTypeEnums) {
         createDeal(holmesDealAbstractClass, dealName, configContext, dealTypeEnums).register();
+    }
+
+    /**
+     * 更新处理器规则
+     * @param dealName
+     * @param configContext
+     */
+    public static void updateDeal(@NonNull String dealName, ConfigContext configContext) {
+        HolmesDealAbstract dealAbstract = (HolmesDealAbstract) DealContext.getDeal(dealName);
+        dealAbstract.configContext = configContext;
     }
 
 }
