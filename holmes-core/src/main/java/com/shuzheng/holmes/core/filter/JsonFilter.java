@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class JsonFilter extends HolmesFilterAbstract {
 
     @Override
-    public Object filter(Object msg) {
+    protected Object filter(Object msg) {
         String keys = configContext.getString("keys");
         HashMap<String, String> hashMap = new HashMap();
         JSONObject jsonObject = JSONObject.parseObject(msg.toString());

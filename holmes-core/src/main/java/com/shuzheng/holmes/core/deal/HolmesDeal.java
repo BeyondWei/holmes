@@ -17,5 +17,5 @@ public interface HolmesDeal {
     /**
      * 处理器实现
      */
-    void deal(Object msg);
+    void run(Object msg);
 }

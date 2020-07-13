@@ -1,15 +1,12 @@
 package com.shuzheng.holmes.core.filter;
 
-import com.alibaba.fastjson.JSONObject;
-
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 public class SplitFilter extends HolmesFilterAbstract {
 
     @Override
-    public Object filter(Object msg) {
+    protected Object filter(Object msg) {
         String splitKey = configContext.getString("splitKey");
         String value = configContext.getString("value");
         String[] split = msg.toString().split(splitKey);

@@ -22,31 +22,28 @@ import com.shuzheng.holmes.core.filter.HolmesFilterFactory;
 import com.shuzheng.holmes.server.dto.DealDto;
 import com.shuzheng.holmes.server.dto.FilterDto;
 import com.shuzheng.holmes.service.bussiness.BusHolmesServerService;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FilterTask implements Runnable {
-    private ConsumerRecord<Integer, String> record;
     private DataFormat dataFormat;
-    private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private AtomicInteger atomicInteger;
 
-    public FilterTask(DataFormat dataFormat,AtomicInteger atomicInteger) {
+    public static HashMap<String, String> results_map = new HashMap<>();
+
+    public FilterTask(DataFormat dataFormat, AtomicInteger atomicInteger) {
         this.dataFormat = dataFormat;
         this.atomicInteger = atomicInteger;
     }
-
 
     @Override
     public void run() {
         BusHolmesServerService busHolmesServerService = SpringUtil.getBean(BusHolmesServerService.class);
         String logUuid = dataFormat.getHeaderMap().get(Constants.HOLMES_LOG_UUID);
         String projectUuid = dataFormat.getHeaderMap().get(Constants.HOLMES_PROJECT_UUID);
-
+        results_map.put(projectUuid + "-" + logUuid, dataFormat.getMsg());
         // 获取不同的过滤组
         List<THsFilterRulesGroup> filterRulesGroupByProjectUuid = busHolmesServerService.getFilterRulesGroupByProjectUuid(projectUuid);
         // 分别执行不同的过滤组
@@ -124,8 +121,7 @@ public class FilterTask implements Runnable {
         }
         // 执行处理器
         HolmesDeal alertDeal = DealContext.getDeal(dealName);
-        alertDeal.deal(object);
+        alertDeal.run(object);
     }
-
 
 }

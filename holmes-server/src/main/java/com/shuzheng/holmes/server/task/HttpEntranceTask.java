@@ -5,25 +5,29 @@ import com.shuzheng.holmes.common.dto.DataFormat;
 import com.shuzheng.holmes.common.utils.StringUtils;
 import com.shuzheng.holmes.common.utils.ThreadPoolFactory;
 import com.shuzheng.holmes.core.entrance.HolmesEntranceAbstract;
+import com.shuzheng.holmes.server.dto.HolmesHttpDto;
 import com.shuzheng.holmes.service.bussiness.BusHolmesServerService;
 import lombok.SneakyThrows;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
-@RequestMapping("httpEntranceTask")
+@RequestMapping("/httpEntranceTask")
 public class HttpEntranceTask extends HolmesEntranceAbstract {
 
     @Autowired
     private BusHolmesServerService busHolmesServerService;
 
     private static boolean flag = true;
+
+    private static final Logger log = LoggerFactory.getLogger(HttpEntranceTask.class);
 
 
     protected static AtomicInteger atomicInteger = new AtomicInteger(0);
@@ -53,7 +57,7 @@ public class HttpEntranceTask extends HolmesEntranceAbstract {
         if (!StringUtils.isEmpty(logUuid) && !StringUtils.isEmpty(projectUuid) && busHolmesServerService.isExist(projectUuid, logUuid)) {
             COUNT.incrementAndGet();
             ThreadPoolExecutor threadPoolExecutor = ThreadPoolFactory.getInstance().autoCreate(projectUuid + "-" + logUuid, 10000);
-            FilterTask filterTask = new FilterTask(dataFormat,COUNT);
+            FilterTask filterTask = new FilterTask(dataFormat, COUNT);
             threadPoolExecutor.execute(filterTask);
         }
     }
@@ -65,17 +69,26 @@ public class HttpEntranceTask extends HolmesEntranceAbstract {
     }
 
 
-    @RequestMapping("receive")
-    public String receive(@RequestHeader("projectUuid") String projectUuid, @RequestHeader("logUuid") String logUuid,
-                          String msg) {
+    @PostMapping("/receive")
+    public Mono<String> receive(@RequestHeader("projectUuid") String projectUuid, @RequestHeader("logUuid") String logUuid,
+                                @RequestBody HolmesHttpDto data) {
+
+        String msg = data.getMsg();
         if (!flag) {
-            return "程序压力过大，停止接收";
+            log.error("-------------程序压力过大，停止接收--------------");
+            return Mono.just("程序压力过大，停止接收");
+        }
+        if (StringUtils.isEmpty(projectUuid)) {
+            data.setProjectUuid(projectUuid);
+        }
+        if (StringUtils.isEmpty(logUuid)) {
+            data.setLogUuid(logUuid);
         }
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put(Constants.HOLMES_PROJECT_UUID, projectUuid);
         hashMap.put(Constants.HOLMES_LOG_UUID, logUuid);
         start(new DataFormat(hashMap, msg));
-        return msg;
+        return Mono.just(msg);
     }
 
     @RequestMapping("getTotal")

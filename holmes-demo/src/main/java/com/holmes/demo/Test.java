@@ -1,9 +1,8 @@
-package com.shuzheng.holmes.server;
+package com.holmes.demo;
 
 import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * @author linbingwen

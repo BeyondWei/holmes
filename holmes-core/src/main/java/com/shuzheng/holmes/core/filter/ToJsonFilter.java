@@ -1,14 +1,12 @@
 package com.shuzheng.holmes.core.filter;
 
-import org.springframework.util.StringUtils;
-
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class ToJsonFilter extends HolmesFilterAbstract {
 
     @Override
-    public Object filter(Object msg) {
+    protected Object filter(Object msg) {
         String split = configContext.getString("split");
         String equal = configContext.getString("equal");
         HashMap<String, String> hashMap = new HashMap<>();

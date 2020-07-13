@@ -859,4 +859,10 @@ public final class Constants {
      */
     public static final String DEAL_LOG_FILE_PATH = "log.file.path";
 
+    /**
+     * defalt_filter
+     */
+    public static final String DEFAULT_FILTER_NAME = "default_filter";
+    public static final String DEFAULT_FILTER_CLASS_NAME = "com.shuzheng.holmes.core.filter.DefaultFilter";
+
 }

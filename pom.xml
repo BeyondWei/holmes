@@ -12,6 +12,7 @@
         <module>holmes-core</module>
         <module>holmes-service</module>
         <module>holmes-dao</module>
+        <module>holmes-demo</module>
     </modules>
 
     <groupId>com.shuzheng</groupId>
@@ -45,6 +46,7 @@
         <dolphinscheduler.version>1.2.1</dolphinscheduler.version>
         <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
         <spring.boot.kafka.version>2.2.8.RELEASE</spring.boot.kafka.version>
+        <spring.boot.webflux.version>2.1.7.RELEASE</spring.boot.webflux.version>
         <spring.boot.version>2.1.7.RELEASE</spring.boot.version>
         <ehcache.version>2.10.4</ehcache.version>
         <spring.context.version>5.2.6.RELEASE</spring.context.version>
@@ -149,20 +151,14 @@
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter</artifactId>
+                <artifactId>spring-boot-starter-webflux</artifactId>
+                <version>${spring.boot.webflux.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${spring.context.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.dolphinscheduler</groupId>
-                <artifactId>apache-dolphinscheduler-incubating</artifactId>
-                <version>${dolphinscheduler.remote.version}</version>
             </dependency>
 
             <dependency>
