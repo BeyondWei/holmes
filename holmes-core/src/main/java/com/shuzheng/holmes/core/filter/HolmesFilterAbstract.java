@@ -1,11 +1,13 @@
 package com.shuzheng.holmes.core.filter;
 
+import com.alibaba.fastjson.JSONObject;
 import com.shuzheng.holmes.core.context.ConfigContext;
 import com.shuzheng.holmes.core.context.FilterContext;
 import com.shuzheng.holmes.core.enums.FilterTypeEnums;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -63,6 +65,5 @@ public abstract class HolmesFilterAbstract implements HolmesFilter {
             FilterContext.register(this);
         }
     }
-
 
 }
