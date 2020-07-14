@@ -8,10 +8,10 @@ import com.shuzheng.holmes.core.enums.FilterTypeEnums;
 import com.shuzheng.holmes.core.filter.HolmesFilterAbstract;
 import com.shuzheng.holmes.core.filter.HolmesFilterFactory;
 import com.shuzheng.holmes.server.dto.FilterDto;
+import lombok.Data;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
@@ -46,7 +46,7 @@ public class TestFilter {
             if (!StringUtils.isEmpty(configContext.getString("hashMapKey"))) {
                 Map map = JSONObject.parseObject(filterDto.getMsg(), Map.class);
                 results = holmesFilter.run(map);
-            }else {
+            } else {
                 results = holmesFilter.run(filterDto.getMsg());
             }
         } catch (Exception e) {
@@ -55,5 +55,20 @@ public class TestFilter {
             FilterContext.remove(holmesTempName);
         }
         return Mono.just(results);
+    }
+
+    @RequestMapping("test")
+    public void getTest(@RequestHeader String token, T t) {
+
+        System.out.println(token);
+        System.out.println(t.key);
+        System.out.println(t.msg);
+
+    }
+
+    @Data
+    class T{
+        private String msg;
+        private String key;
     }
 }

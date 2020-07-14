@@ -83,6 +83,8 @@ public class FilterTask implements Runnable {
     private Object todoFilter(Object msg, THsFilterRulesInfo tHsFilterRulesInfo) {
         FilterDto filterDto = JSONObject.parseObject(tHsFilterRulesInfo.getContext(), FilterDto.class);
         String filterName = tHsFilterRulesInfo.getUuid() + "-" + filterDto.getHolmesFilterName();
+        ConfigContext configContext = new ConfigContext();
+        configContext.getJsonProperties(tHsFilterRulesInfo.getConfig());
         // 生产过滤器
         if (!FilterContext.isExist(filterName)) {
             Class<HolmesFilterAbstract> aClass = (Class<HolmesFilterAbstract>) ClassloadUtils.getClassloadUtils().tryGetClass(filterDto.getClassName());
@@ -92,12 +94,14 @@ public class FilterTask implements Runnable {
                         filterDto.getJavaPath(),
                         filterDto.getClassPath());
             }
-            ConfigContext configContext = new ConfigContext();
-            configContext.getJsonProperties(tHsFilterRulesInfo.getConfig());
             HolmesFilterFactory.createAndRegister(aClass, filterName, configContext, FilterTypeEnums.valueOf(tHsFilterRulesInfo.getType()));
         }
         // 执行过滤器
-        HolmesFilter holmesFilter = FilterContext.getFilter(filterName);
+        HolmesFilterAbstract holmesFilter = (HolmesFilterAbstract) FilterContext.getFilter(filterName);
+        // 自动更新
+        if (!holmesFilter.getConfigContext().equals(configContext)) {
+            HolmesFilterFactory.updateFilter(filterName, configContext);
+        }
         return holmesFilter.run(msg);
     }
 
@@ -107,6 +111,8 @@ public class FilterTask implements Runnable {
     private void todoDeal(Object object, THsDealRulesInfo tHsDealRulesInfo) {
         DealDto dealDto = JSONObject.parseObject(tHsDealRulesInfo.getContext(), DealDto.class);
         String dealName = tHsDealRulesInfo.getUuid() + "-" + dealDto.getHolmesDealName();
+        ConfigContext configContext = new ConfigContext();
+        configContext.getJsonProperties(tHsDealRulesInfo.getConfig());
         if (!DealContext.isExist(dealName)) {
             Class<HolmesDealAbstract> aClass = (Class<HolmesDealAbstract>) ClassloadUtils.getClassloadUtils().tryGetClass(dealDto.getClassName());
             if (aClass == null) {
@@ -115,13 +121,15 @@ public class FilterTask implements Runnable {
                         dealDto.getJavaPath(),
                         dealDto.getClassPath());
             }
-            ConfigContext configContext = new ConfigContext();
-            configContext.getJsonProperties(tHsDealRulesInfo.getConfig());
             HolmesDealFactory.createAndRegister(aClass, dealName, configContext, DealTypeEnums.valueOf(tHsDealRulesInfo.getType()));
         }
         // 执行处理器
-        HolmesDeal alertDeal = DealContext.getDeal(dealName);
-        alertDeal.run(object);
+        HolmesDealAbstract dealAbstract = (HolmesDealAbstract) DealContext.getDeal(dealName);
+        // 自动更新
+        if (!dealAbstract.getConfigContext().equals(configContext)) {
+            HolmesFilterFactory.updateFilter(dealName, configContext);
+        }
+        dealAbstract.run(object);
     }
 
 }
