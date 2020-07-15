@@ -127,7 +127,7 @@ public class FilterTask implements Runnable {
         HolmesDealAbstract dealAbstract = (HolmesDealAbstract) DealContext.getDeal(dealName);
         // 自动更新
         if (!dealAbstract.getConfigContext().equals(configContext)) {
-            HolmesFilterFactory.updateFilter(dealName, configContext);
+            HolmesDealFactory.updateDeal(dealName, configContext);
         }
         dealAbstract.run(object);
     }

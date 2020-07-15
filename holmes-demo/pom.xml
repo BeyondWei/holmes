@@ -13,15 +13,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.flume.flume-ng-clients</groupId>
-            <artifactId>flume-ng-log4jappender-sz</artifactId>
-            <version>1.8.0</version>
+            <groupId>com.shuzheng</groupId>
+            <artifactId>holmes-sdk</artifactId>
         </dependency>
     </dependencies>
 

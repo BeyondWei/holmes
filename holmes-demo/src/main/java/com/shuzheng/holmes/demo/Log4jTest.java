@@ -1,4 +1,5 @@
-package com.holmes.demo;
+package com.shuzheng.holmes.demo;
+
 
 import org.apache.log4j.Logger;
 
@@ -8,8 +9,8 @@ import java.text.SimpleDateFormat;
  * @author linbingwen
  * @2015年5月18日9:14:21
  */
-public class Test {
-    private static Logger logger = Logger.getLogger(Test.class);
+public class Log4jTest {
+    private static Logger logger = Logger.getLogger(Log4jTest.class);
 
     /**
      * @param args
@@ -22,7 +23,7 @@ public class Test {
        // String msg = "11111111111111111111111111111111111111111111111111111111111111111";
         logger.debug(msg);
         while (true) {
-            Thread.sleep(2);
+            Thread.sleep(2000);
             // 记录debug级别的信息
             logger.debug(msg);
             i++;

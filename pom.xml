@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <modules>
         <module>holmes-common</module>
-        <module>holmes-agent</module>
+        <module>holmes-sdk</module>
         <module>holmes-api</module>
         <module>holmes-server</module>
         <module>holmes-alert</module>
@@ -61,6 +61,8 @@
         <!--        tk mybatis 代码生成-->
         <mybatis-generator-maven-plugin.version>1.3.5</mybatis-generator-maven-plugin.version>
         <tk.mybatis.mapper.version>3.4.3</tk.mybatis.mapper.version>
+        <log4j.version>1.2.17</log4j.version>
+        <logback.version>1.2.3</logback.version>
     </properties>
 
     <dependencyManagement>
@@ -207,6 +209,29 @@
                 <version>${ehcache.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.shuzheng</groupId>
+                <artifactId>holmes-sdk</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
 
 

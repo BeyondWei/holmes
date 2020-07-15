@@ -13,7 +13,6 @@
         </encoder>
     </appender>
 
-
     <!--在控制台打印sql , 不计入log文件-->
     <logger name="com.shuzheng.holmes.dao.mapper" level="TRACE" additivity="false">
         <appender-ref ref="CONSOLE"/>
