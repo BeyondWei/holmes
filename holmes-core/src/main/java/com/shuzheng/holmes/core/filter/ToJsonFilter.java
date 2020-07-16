@@ -1,5 +1,7 @@
 package com.shuzheng.holmes.core.filter;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -21,6 +23,6 @@ public class ToJsonFilter extends HolmesFilterAbstract {
                 hashMap.put(key, value);
             }
         });
-        return hashMap;
+        return JSONObject.toJSONString(hashMap);
     }
 }
