@@ -14,11 +14,17 @@
             holmes.projectUuid=shuzheng,
             holmes.logUuid=test
         </additionalAvroHeaders>
+    </appender>
 
+
+    <appender name="HOLMES" class="com.shuzheng.holmes.sdk.http.HolmesHttpLogbackAppender">
+        <hosts>192.168.5.82:8899</hosts>
+        <projectUuid>shuzheng</projectUuid>
+        <logUuid>test</logUuid>
     </appender>
 
     <root level="info">
-        <appender-ref ref="FLUME"/>
+        <appender-ref ref="HOLMES"/>
     </root>
 
 </configuration>

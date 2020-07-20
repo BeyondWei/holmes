@@ -1,4 +1,4 @@
-package com.shuzheng.holmes.common.utils;
+package com.shuzheng.holmes.sdk.http;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpHost;
