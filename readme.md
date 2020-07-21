@@ -23,8 +23,9 @@
 - holmes-api （尚未开发）
 	- 对接前端提供的api接口
 	
-- holmes-sdk  (尚未开发)
-	- 集成至其他项目的sdk包
+- holmes-sdk  
+	- 推送至flume的log4jAppender和logbackAppender开发
+	- 直接推送至holmes-server的log4jAppender和logbackAppender开发
 
 
 ### 核心功能说明
@@ -58,6 +59,9 @@
 		log4j.appender.flume.logUuid = test
 		log4j.appender.flume.projectUuid = shuzheng
 		```
+ 
+ - 接入SDK
+    - 引入SDK通过SDK中的httpLogAppender进行日志的推送
 	
 #### 过滤器
 
@@ -168,6 +172,24 @@
 		}
 		```
 		log.file.path: 日志存放地址
+		
+- Rest 方式传输
+    - context 填写
+    ```
+    {
+        "holmesDealName": "HttpDeal",
+        "className": "com.shuzheng.holmes.core.deal.HttpDeal"
+    }
+    ```
+    - config 填写
+    ```
+    {
+        "url": "http://127.0.0.1:8899/testFilter/test",
+        "heads": "{\"token\":\"1111\"}",
+        "key": "msg",
+        "forms": "{\"key\":\"key1\"}"
+    }
+    ```
 
 #### 统计功能
 
