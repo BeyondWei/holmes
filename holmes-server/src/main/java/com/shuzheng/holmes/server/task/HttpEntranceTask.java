@@ -29,8 +29,6 @@ public class HttpEntranceTask extends HolmesEntranceAbstract {
 
     private static final Logger log = LoggerFactory.getLogger(HttpEntranceTask.class);
 
-    protected static AtomicInteger atomicInteger = new AtomicInteger(0);
-
     @SneakyThrows
     @Override
     public void init() {
@@ -90,14 +88,4 @@ public class HttpEntranceTask extends HolmesEntranceAbstract {
         return Mono.just(msg);
     }
 
-    @RequestMapping("getTotal")
-    public Integer getTotal() {
-        return atomicInteger.get();
-    }
-
-    @RequestMapping("reset")
-    public Integer reset() {
-        atomicInteger = new AtomicInteger(0);
-        return atomicInteger.get();
-    }
 }

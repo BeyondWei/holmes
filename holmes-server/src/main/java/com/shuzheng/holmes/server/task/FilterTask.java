@@ -73,7 +73,6 @@ public class FilterTask implements Runnable {
 //        tHsKafkaLogInfoService.deleteById(flumeData.getId());
 //        DataOffset.deleteFile("kafka", record.topic() + "-" + record.partition() + "-" + record.offset());
         atomicInteger.decrementAndGet();
-        HttpEntranceTask.atomicInteger.incrementAndGet();
     }
 
 
