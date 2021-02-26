@@ -16,6 +16,10 @@
             <groupId>com.shuzheng</groupId>
             <artifactId>holmes-sdk</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.shuzheng</groupId>
+            <artifactId>holmes-core</artifactId>
+        </dependency>
     </dependencies>
 
 

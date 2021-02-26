@@ -34,12 +34,7 @@ public class FilterContext {
      * 判断过滤器是否存在
      */
     public static boolean isExist(String holmesFilterName) {
-        for (String s : contextMap.keySet()) {
-            if (holmesFilterName.equals(s)) {
-                return true;
-            }
-        }
-        return false;
+        return contextMap.keySet().contains(holmesFilterName);
     }
 
     /**

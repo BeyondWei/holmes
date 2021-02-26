@@ -35,12 +35,7 @@ public class DealContext {
      * 判断处理器是否存在
      */
     public static boolean isExist(String holmesDealName) {
-        for (String s : contextMap.keySet()) {
-            if (holmesDealName.equals(s)) {
-                return true;
-            }
-        }
-        return false;
+        return contextMap.keySet().contains(holmesDealName);
     }
 
     /**

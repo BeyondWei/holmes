@@ -9,7 +9,6 @@ import com.shuzheng.holmes.core.filter.HolmesFilterAbstract;
 import com.shuzheng.holmes.core.filter.HolmesFilterFactory;
 import com.shuzheng.holmes.server.dto.FilterDto;
 import lombok.Data;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -56,6 +55,7 @@ public class TestFilter {
         }
         return Mono.just(results);
     }
+
 
     @RequestMapping("test")
     public void getTest(@RequestHeader String token, T t) {

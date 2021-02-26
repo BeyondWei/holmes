@@ -75,10 +75,10 @@ public class HttpEntranceTask extends HolmesEntranceAbstract {
             log.error("-------------程序压力过大，停止接收--------------");
             return Mono.just("程序压力过大，停止接收");
         }
-        if (StringUtils.isEmpty(projectUuid)) {
+        if (!StringUtils.isEmpty(projectUuid)) {
             data.setProjectUuid(projectUuid);
         }
-        if (StringUtils.isEmpty(logUuid)) {
+        if (!StringUtils.isEmpty(logUuid)) {
             data.setLogUuid(logUuid);
         }
         HashMap<String, String> hashMap = new HashMap<>();
